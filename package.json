@@ -1,0 +1,19 @@
+{
+  "name": "pie_bot",
+  "version": "1.0.0",
+  "description": "My own custom discord bot for my server https://discord.gg/xdWK2rkPMr",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Somebody8pie/Pie_Bot.git"
+  },
+  "author": "Somebody8pie",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Somebody8pie/Pie_Bot/issues"
+  },
+  "homepage": "https://github.com/Somebody8pie/Pie_Bot#readme"
+}
