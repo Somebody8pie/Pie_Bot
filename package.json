@@ -2,9 +2,9 @@
   "name": "pie_bot",
   "version": "1.0.0",
   "description": "My own custom discord bot for my server https://discord.gg/xdWK2rkPMr",
-  "main": "index.js",
+  "main": "src/bot.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ."
   },
   "repository": {
     "type": "git",
