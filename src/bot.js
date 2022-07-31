@@ -1,23 +1,54 @@
-require("dotenv").config();
-const { token } = process.env;
-const { Client, Collection, GatewayIntentBits } = require("discord.js");
-const fs = require("fs");
+const fs = require('node:fs');
+const path = require('node:path');
+const { Client, Collection, GatewayIntentBits } = require('discord.js');
+require('dotenv').config()
+const { token, guildId, clientId } = process.env
 
-const client = new Client({ intents: GatewayIntentBits.Guilds });
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+
 client.commands = new Collection();
-client.commandArray = []
+const commandsPath = path.join(__dirname, 'commands');
+const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
-const functionFolders = fs.readdirSync("./src/functions"); // getting all the folders
-// Getting all the files ending with .js
-for (const folder of functionFolders) {
-  const functionFiles = fs
-    .readdirSync(`src/functions/${folder}`)
-    .filter((file) => file.endsWith(".js"));  
-    // And passing in client to that file so we can use for example client.on 
-  for (const file of functionFiles)
-    require(`./functions/${folder}/${file}`)(client);
+for (const file of commandFiles) {
+	const filePath = path.join(commandsPath, file);
+	const command = require(filePath);
+	// Set a new item in the Collection
+	// With the key as the command name and the value as the exported module
+	client.commands.set(command.data.name, command);
 }
 
-client.handleEvents()
-client.handleCommands()
-client.login(token)
+
+const eventsPath = path.join(__dirname, 'events');
+const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
+
+for (const file of eventFiles) {
+	const filePath = path.join(eventsPath, file);
+	const event = require(filePath);
+	if (event.once) {
+		client.once(event.name, (...args) => event.execute(...args));
+	} else {
+		client.on(event.name, (...args) => event.execute(...args));
+	}
+}
+
+client.once('ready', () => {
+	console.log('Ready!');
+});
+
+client.on('interactionCreate', async interaction => {
+	if (!interaction.isChatInputCommand()) return;
+
+	const command = client.commands.get(interaction.commandName);
+
+	if (!command) return;
+
+	try {
+		await command.execute(interaction);
+	} catch (error) {
+		console.error(error);
+		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+	}
+});
+
+client.login(token);
