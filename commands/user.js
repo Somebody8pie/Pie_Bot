@@ -4,17 +4,40 @@ const { EmbedBuilder } = require(`discord.js`);
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('user')
-		.setDescription('Shows your user info!'),
+		.setDescription('Shows your user info!')
+		.addUserOption(option => 
+			option.setName("user")
+			.setDescription("The user you want info from")),
 	async execute(interaction) {
-		let bot = 'No'
-		if(interaction.user.bot === true) bot = 'Yes'
+		const member = interaction.options.getMember("user") || interaction.member
 		const embed = new EmbedBuilder()
 			.setAuthor({
-				iconURL: interaction.user.avatarURL(),
-				name: interaction.user.tag
+				iconURL: member.user.avatarURL(),
+				name: member.user.tag
 			})
-			.setDescription(`**Id: **${interaction.user.id}\n**Created: **${Date.now() - interaction.user.createdTimestamp}\n**Bot: **${bot}`)
-			.setThumbnail(interaction.user.avatarURL())
+			.addFields([
+				{
+					name: `__**Id**__`,
+					value: member.user.id,
+					inline: true
+				},
+				{
+					name: `__**Created**__`,
+					value: `${member.user.createdAt}`,
+					inline: true
+				},
+				{
+					name: `__**Joined**__`,
+					value: `${member.joinedAt}`,
+					inline: true
+				},
+				{
+					name: `__**Bot**__`,
+					value: member.user.bot ? 'Yes' : 'No',
+					inline: true
+				}
+			])
+			.setThumbnail(member.user.avatarURL())
 			.setColor(0xa97b2e)
 		await interaction.reply({
 			embeds: [embed],
