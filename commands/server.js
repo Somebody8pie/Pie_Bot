@@ -12,7 +12,7 @@ module.exports = {
                 iconURL: interaction.guild.iconURL(),
                 name: interaction.guild.name
             })
-            .setDescription(`:people_hugging: **Total members:** ${interaction.guild.memberCount}\n\n**<:update:986539100221874176> Server Created:** ${interaction.guild.createdAt}\n\n:warning: **Verification level: **${interaction.guild.verificationLevel}`)
+            .setDescription(`:people_hugging: **Total members:** ${interaction.guild.memberCount}\n\n**:star: Server Created:** ${interaction.guild.createdAt}\n\n:warning: **Verification level: **${interaction.guild.verificationLevel}`)
             .setFooter({
                 iconURL: interaction.client.user.displayAvatarURL(),
                 text: interaction.client.user.tag
